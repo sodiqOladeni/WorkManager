@@ -1,0 +1,36 @@
+/**
+ * 
+ *
+ * This is the class that check the Network in an interval of time as specified in the Worker builder
+ * It extend @Worker Class and Override doWork() that will be executed when the work is about to start
+ *
+ */
+public class InternetWorker extends Worker {
+    private static final String TAG = InternetWorker.class.getSimpleName();
+
+    @NonNull
+    @Override
+    public Result doWork() {
+        /** @getApplicationContext() return the instance of the calling application */
+        final Context context = getApplicationContext();
+
+        /**Checking the SharedPreferences file for the uri for checking database
+         * SharedPreferences is one the permanent data storage which can be used for key:value pair data
+         * It changes based on the value on the Settings Screen
+         *
+         * @endPointLink is the uri to be checking
+         */
+        //Get current preference value
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String endPointLink = sp.getString(context.getString(R.string.pref_api_calling_key),
+                "");
+
+        /**@startNetworkCall is the method that handle the HTTP network connection in the background
+         * It accept the application context and the link to be checking as argument*/
+        //start checking the network for data
+        startNetworkCall(context, endPointLink);
+
+        /** The doWork() return Success after successful execution of the task
+         * Other return type maybe Return.Failure or Return.Retry*/
+        return Result.SUCCESS;
+    }
